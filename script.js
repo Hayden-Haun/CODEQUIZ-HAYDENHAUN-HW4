@@ -5,16 +5,18 @@ var questionNumber = $(".questionNumber");
 var questions = $(".questions");
 
 //JQUERY VARIABLE DECLARATIONS
-var displayQuestion = $("#displayQuestion");
+var displayQuestion = $(".displayQuestion");
 var answerList = $("#answerList");
 
 var counter = 0;
+var userScoreCorrect = 0;
+var userScoreIncorrect = 0;
 
 var questionArray = [
   {
     question:
       "Which programming language is not a fundamental of web development?",
-    answers: ["HTML", "C++", "CSS", "JAVASCRIPT"],
+    answers: ["A. HTML", "B. Python", "C. CSS", "D. JAVASCRIPT"],
     correctAnswer: 1,
   },
   {
@@ -33,7 +35,9 @@ var questionArray = [
 startBtn.on("click", startTimer);
 
 function startTimer() {
+  startBtn.remove();
   console.log("THIS IS WORKING!!!");
+
   showNext();
   var timeLeft = 10;
   var timeInterval = setInterval(function () {
@@ -52,31 +56,45 @@ function startTimer() {
 }
 
 function showNext() {
-  //UPDATE TO JQUERY LINGO
-  //questionNumber.textContent = "Question # " + (counter + 1);
-  questionNumber.text("Question #" + counter);
+  var displayNumber = counter + 1;
+
+  questionNumber.text("Question #" + displayNumber);
+
   var currentQuestion = questionArray[counter];
+
   displayQuestion.text(currentQuestion.question);
+
   for (var i = 0; i < currentQuestion.answers.length; i++) {
     var answerLi = $(
-      `<li> <button> ${currentQuestion.answers[i]} </button> </li>`
+      `<li class="listItemQuestion"> <button> ${currentQuestion.answers[i]} </button> </li>`
     );
     answerList.append(answerLi);
   }
+  //counter++;
 }
 
 answerList.on("click", "button", checkIfCorrect);
 
 function checkIfCorrect() {
-  //console.log("THIS IS WORKING!!!");
-
   var selectedAnswer = $(this);
   var correctAnswer =
     questionArray[counter].answers[questionArray[counter].correctAnswer];
   console.log(selectedAnswer.text());
   console.log(correctAnswer);
+
+  if (selectedAnswer === correctAnswer) {
+    userScoreCorrect++;
+  } else {
+    userScoreIncorrect++;
+  }
+  counter++;
+  removePrevious();
+  showNext();
 }
 
-function timeIsOut() {
-  //console.log("timeIsOut working");
+function removePrevious() {
+  var listItemQuestion = $(".listItemQuestion");
+  listItemQuestion.remove();
 }
+
+function timeIsOut() {}
