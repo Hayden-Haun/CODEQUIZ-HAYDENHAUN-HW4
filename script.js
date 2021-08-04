@@ -1,19 +1,21 @@
+//JQUERY VARIABLE DECLARATIONS
 var startBtn = $("#startBtn");
 var timerEl = $("#timer");
 var content = $(".content");
 var questionNumber = $(".questionNumber");
 var questions = $(".questions");
-
-//JQUERY VARIABLE DECLARATIONS
 var displayQuestion = $(".displayQuestion");
 var answerList = $("#answerList");
 
-var timeLeft = 10;
+//GLOBAL - VARIABLE DECLARATIONS
+var timeInitial = 60;
+var timeLeft = timeInitial;
 var counter = 0;
 var userScoreCorrect = 0;
 var userScoreIncorrect = 0;
 var resultsDisplayed = false;
 
+//DECLARE ARRAY OF OBJECTS FOR QUESTIONS, ANSWERS, CORRECT ANSWER
 var questionArray = [
   {
     question:
@@ -23,13 +25,13 @@ var questionArray = [
   },
   {
     question:
-      "What can you use to iterate through something a fixed amount of time?",
+      "Which of the following can be used to execute a set of commands for a specified number of iterations?",
     answers: ["A. For Loop", "B. If Statement", "C. Array", "D. jQuery"],
     correctAnswer: 0,
   },
   {
     question:
-      "What can you use to iterate through a set of commands until a specificed criteria is met?",
+      "Which of the following can be used to execute a set of commands until a specified criteria is met?",
     answers: [
       "A. Bootstrap",
       "B. If Statement",
@@ -37,6 +39,11 @@ var questionArray = [
       "D. Do-While Loop",
     ],
     correctAnswer: 3,
+  },
+  {
+    question: "Hayden's favorite animal is the...",
+    answers: ["A. Tiger", "B. Panda", "C. Sloth", "D. Dinosaur"],
+    correctAnswer: 2,
   },
 ];
 
@@ -76,7 +83,7 @@ function showNext() {
 
     for (var i = 0; i < currentQuestion.answers.length; i++) {
       var answerLi = $(
-        `<li class="listItemQuestion"> <button> ${currentQuestion.answers[i]} </button> </li>`
+        `<li class="listItemQuestion"> <button>${currentQuestion.answers[i]}</button> </li>`
       );
       answerList.append(answerLi);
     }
@@ -92,8 +99,14 @@ function checkIfCorrect() {
   var selectedAnswer = $(this).text();
   var correctAnswer =
     questionArray[counter].answers[questionArray[counter].correctAnswer];
-  console.log("selected answer =" + selectedAnswer);
+
+  var positionSelected = questionArray[counter].answers.indexOf(selectedAnswer);
+  var positionCorrect = questionArray[counter].correctAnswer;
+
+  console.log("selectedanswer =" + selectedAnswer);
   console.log("correctAnswer = " + correctAnswer);
+  console.log("positionSelected = " + positionSelected);
+  console.log("positionCorrect =  " + positionCorrect);
   //console.log(questionArray[counter].answers.indexOf(selectedAnswer));
 
   //console.log(selectedAnswer.indexOf($(this)));
@@ -102,6 +115,7 @@ function checkIfCorrect() {
     userScoreCorrect++;
   } else {
     userScoreIncorrect++;
+    timeLeft = timeLeft - 15;
   }
   counter++;
   removePrevious();
@@ -133,7 +147,7 @@ function displayScore() {
     `<li class="listItemQuestion">WRONG ANSWERS: ${userScoreIncorrect} </li>`
   );
   var resultsTimeLeftLi = $(
-    `<li class="listItemQuestion">TIME REMAINING: ${timeLeft} </li>`
+    `<li class="listItemQuestion">QUIZ COMPLETED WITH: ${timeLeft} SECONDS REMAINING </li>`
   );
 
   answerList.append(resultsQuestionsUnansweredLi);
