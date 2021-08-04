@@ -8,9 +8,11 @@ var questions = $(".questions");
 var displayQuestion = $(".displayQuestion");
 var answerList = $("#answerList");
 
+var timeLeft = 10;
 var counter = 0;
 var userScoreCorrect = 0;
 var userScoreIncorrect = 0;
+var resultsDisplayed = false;
 
 var questionArray = [
   {
@@ -20,26 +22,33 @@ var questionArray = [
     correctAnswer: 1,
   },
   {
-    question: "question2?",
-    answers: ["A", "B", "C", "D"],
-    correctAnswer: 2,
+    question:
+      "What can you use to iterate through something a fixed amount of time?",
+    answers: ["A. For Loop", "B. If Statement", "C. Array", "D. jQuery"],
+    correctAnswer: 0,
   },
   {
-    question: "question3?",
-    answers: ["A", "B", "C", "D"],
+    question:
+      "What can you use to iterate through a set of commands until a specificed criteria is met?",
+    answers: [
+      "A. Bootstrap",
+      "B. If Statement",
+      "C. For Loop",
+      "D. Do-While Loop",
+    ],
     correctAnswer: 3,
   },
 ];
+
+var numberOfQuestions = questionArray.length;
 
 //UPDATE EVENT LISTENER FOR JQUERY
 startBtn.on("click", startTimer);
 
 function startTimer() {
   startBtn.remove();
-  console.log("THIS IS WORKING!!!");
 
   showNext();
-  var timeLeft = 10;
   var timeInterval = setInterval(function () {
     if (timeLeft > 1) {
       timerEl.text(timeLeft);
@@ -56,33 +65,40 @@ function startTimer() {
 }
 
 function showNext() {
-  var displayNumber = counter + 1;
+  if (counter < numberOfQuestions) {
+    var displayNumber = counter + 1;
 
-  questionNumber.text("Question #" + displayNumber);
+    questionNumber.text("Question #" + displayNumber);
 
-  var currentQuestion = questionArray[counter];
+    var currentQuestion = questionArray[counter];
 
-  displayQuestion.text(currentQuestion.question);
+    displayQuestion.text(currentQuestion.question);
 
-  for (var i = 0; i < currentQuestion.answers.length; i++) {
-    var answerLi = $(
-      `<li class="listItemQuestion"> <button> ${currentQuestion.answers[i]} </button> </li>`
-    );
-    answerList.append(answerLi);
+    for (var i = 0; i < currentQuestion.answers.length; i++) {
+      var answerLi = $(
+        `<li class="listItemQuestion"> <button> ${currentQuestion.answers[i]} </button> </li>`
+      );
+      answerList.append(answerLi);
+    }
+    //counter++;
+  } else {
+    displayScore();
   }
-  //counter++;
 }
 
 answerList.on("click", "button", checkIfCorrect);
 
 function checkIfCorrect() {
-  var selectedAnswer = $(this);
+  var selectedAnswer = $(this).text();
   var correctAnswer =
     questionArray[counter].answers[questionArray[counter].correctAnswer];
-  console.log(selectedAnswer.text());
-  console.log(correctAnswer);
+  console.log("selected answer =" + selectedAnswer);
+  console.log("correctAnswer = " + correctAnswer);
+  //console.log(questionArray[counter].answers.indexOf(selectedAnswer));
 
-  if (selectedAnswer === correctAnswer) {
+  //console.log(selectedAnswer.indexOf($(this)));
+
+  if (selectedAnswer == correctAnswer) {
     userScoreCorrect++;
   } else {
     userScoreIncorrect++;
@@ -97,4 +113,39 @@ function removePrevious() {
   listItemQuestion.remove();
 }
 
-function timeIsOut() {}
+function displayScore() {
+  resultsDisplayed = true;
+  var unansweredQuestions = numberOfQuestions - counter;
+  questionNumber.text("QUIZ OVER.");
+  displayQuestion.text("Stats:");
+
+  var resultsQuestionsAnsweredLi = $(
+    `<li class="listItemQuestion">ANSWERED QUESTIONS: ${counter} </li>`
+  );
+
+  var resultsQuestionsUnansweredLi = $(
+    `<li class="listItemQuestion">UNANSWERED QUESTIONS: ${unansweredQuestions} </li>`
+  );
+  var resultsCorrectLi = $(
+    `<li class="listItemQuestion">CORRECT ANSWERS: ${userScoreCorrect} </li>`
+  );
+  var resultsIncorrectLi = $(
+    `<li class="listItemQuestion">WRONG ANSWERS: ${userScoreIncorrect} </li>`
+  );
+  var resultsTimeLeftLi = $(
+    `<li class="listItemQuestion">TIME REMAINING: ${timeLeft} </li>`
+  );
+
+  answerList.append(resultsQuestionsUnansweredLi);
+  answerList.append(resultsQuestionsAnsweredLi);
+  answerList.append(resultsCorrectLi);
+  answerList.append(resultsIncorrectLi);
+  answerList.append(resultsTimeLeftLi);
+}
+
+function timeIsOut() {
+  if (!resultsDisplayed) {
+    removePrevious();
+    displayScore();
+  }
+}
