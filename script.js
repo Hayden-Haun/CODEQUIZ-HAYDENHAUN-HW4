@@ -6,6 +6,11 @@ var questionNumber = $(".questionNumber");
 var questions = $(".questions");
 var displayQuestion = $(".displayQuestion");
 var answerList = $("#answerList");
+var highScoreEl = $(".highScore");
+var highScoreStorage = $(".highScoreStorage");
+var highScoreList = $(".highScoreList");
+
+var highScoreArray = [];
 
 //GLOBAL - VARIABLE DECLARATIONS
 var timeInitial = 60;
@@ -19,19 +24,19 @@ var resultsDisplayed = false;
 var questionArray = [
   {
     question:
-      "Which programming language is not a fundamental of web development?",
+      "Which of the following is not a fundamental programming language of web development?",
     answers: ["A. HTML", "B. Python", "C. CSS", "D. JAVASCRIPT"],
     correctAnswer: 1,
   },
   {
     question:
-      "Which of the following can be used to execute a set of commands for a specified number of iterations?",
+      "Which of the following can be used to execute a set of commands over and over again, for a specified number of iterations?",
     answers: ["A. For Loop", "B. If Statement", "C. Array", "D. jQuery"],
     correctAnswer: 0,
   },
   {
     question:
-      "Which of the following can be used to execute a set of commands until a specified criteria is met?",
+      "Which of the following can be used to execute a set of commands over and over again, until a specified criteria is met?",
     answers: [
       "A. Bootstrap",
       "B. If Statement",
@@ -47,11 +52,14 @@ var questionArray = [
   },
 ];
 
+//DECLARE VARIABLE TO TRACK THE NUMBER OF QUESTIONS
 var numberOfQuestions = questionArray.length;
 
-//UPDATE EVENT LISTENER FOR JQUERY
+//EVENT LISTENER FOR START BUTTON. CALLS STARTTIMER FUNCTION
 startBtn.on("click", startTimer);
 
+//THIS FUNCTION STARTS TIMER, REMOVES START BUTTON, AND CALLS SHOWNEXT FUNCTION
+//IF TIME RUNS OUT, CALLS TIMEISOUTFUNCTION
 function startTimer() {
   startBtn.remove();
 
@@ -71,6 +79,7 @@ function startTimer() {
   }, 1000);
 }
 
+//THIS FUNCTION DISPLAYS THE NEXT QUESTION & MULTIPLE CHOICE ANSWERS
 function showNext() {
   if (counter < numberOfQuestions) {
     var displayNumber = counter + 1;
@@ -93,6 +102,7 @@ function showNext() {
   }
 }
 
+//EVENT LISTENER TO CALL NEXT FUNCTION WHEN USER SELECTS ANSWER
 answerList.on("click", "button", checkIfCorrect);
 
 function checkIfCorrect() {
@@ -103,10 +113,11 @@ function checkIfCorrect() {
   var positionSelected = questionArray[counter].answers.indexOf(selectedAnswer);
   var positionCorrect = questionArray[counter].correctAnswer;
 
-  console.log("selectedanswer =" + selectedAnswer);
-  console.log("correctAnswer = " + correctAnswer);
-  console.log("positionSelected = " + positionSelected);
-  console.log("positionCorrect =  " + positionCorrect);
+  //COMMENTS FOR DEBUGGING
+  //console.log("selectedanswer =" + selectedAnswer);
+  //console.log("correctAnswer = " + correctAnswer);
+  //console.log("positionSelected = " + positionSelected);
+  //console.log("positionCorrect =  " + positionCorrect);
   //console.log(questionArray[counter].answers.indexOf(selectedAnswer));
 
   //console.log(selectedAnswer.indexOf($(this)));
@@ -122,11 +133,13 @@ function checkIfCorrect() {
   showNext();
 }
 
+//THIS FUNCTION REMOVES THE INFORMATION FROM THE PREVIOUS QUESTION
 function removePrevious() {
   var listItemQuestion = $(".listItemQuestion");
   listItemQuestion.remove();
 }
 
+//THIS FUNCTION DISPLAYS THE RESULTS OF THE USER'S GAME. ADDS A BUTTON TO VIEW HIGHSCORES
 function displayScore() {
   resultsDisplayed = true;
   var unansweredQuestions = numberOfQuestions - counter;
@@ -155,11 +168,54 @@ function displayScore() {
   answerList.append(resultsCorrectLi);
   answerList.append(resultsIncorrectLi);
   answerList.append(resultsTimeLeftLi);
+
+  var highScorePage = $(
+    `<button class="highScoreBtn"> Click Here to save your score and see other high scores!</button>`
+  );
+
+  highScoreEl.append(highScorePage);
 }
 
+//FUNCTION ENDS GAME IF TIME RUNS OUT. THE CODE WILL ONLY EXECUTE IF THE USER HAS NOT ALREADY FINISHED THE GAME.
 function timeIsOut() {
   if (!resultsDisplayed) {
     removePrevious();
     displayScore();
   }
+}
+
+//EVENT LISTENER FOR CLICK ON HIGH SCORE BUTTON
+highScoreEl.on("click", "button", highScores);
+
+//FUNCTION TO DISPLAY HIGH SCORE STORAGE PAGE
+function highScores() {
+  removePrevious();
+
+  var highScoreBtn = $(".highScoreBtn");
+  highScoreBtn.remove();
+
+  questionNumber.text("RECORD YOUR SCORE HERE:");
+  displayQuestion.text("Your score: " + userScoreCorrect);
+
+  var initialInput =
+    $(`<input type="text" placeholder="Enter your initials here" name="initialInput"
+    id="initialInput"
+  />`);
+
+  var submitScore = $(`<button class="submitScore"> SUBMIT</button>`);
+
+  highScoreStorage.append(initialInput);
+  highScoreStorage.append(submitScore);
+
+  //EVENT LISTENER TO STORE INITIALS AND SCORE TO LOCAL STORAGE
+  var submitScoreBtn = $(`.submitScore`);
+  submitScoreBtn.on("click", "button", highScoreList);
+}
+
+function highScoreList() {
+  // var highScoreInput1 =
+  console.log("THIS IS WORKING");
+  // var storedScores = JSON.parse(
+  //   localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray))
+  // );
 }

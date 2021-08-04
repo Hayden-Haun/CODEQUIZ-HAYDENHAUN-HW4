@@ -3,13 +3,13 @@
 }
 
 body {
-  background-color: rebeccapurple;
+  background-color: rgb(15, 141, 128);
 }
 
 header {
   display: flex;
   justify-content: flex-end;
-  background-color: pink;
+  background-color: rgba(69, 199, 125, 0.89);
   margin-bottom: 50px;
   padding: 25px;
 }
@@ -18,7 +18,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: pink;
+  background-color: rgba(69, 199, 125, 0.89);
   padding: 25px;
 }
 
@@ -32,6 +32,30 @@ ul {
 }
 
 .listItemQuestion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+}
+
+.highScoreStorage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+}
+
+.highScoreList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+}
+
+.initialInput {
   display: flex;
   justify-content: center;
   align-items: center;
