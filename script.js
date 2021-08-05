@@ -208,14 +208,29 @@ function highScores() {
   highScoreStorage.append(submitScore);
 
   //EVENT LISTENER TO STORE INITIALS AND SCORE TO LOCAL STORAGE
-  var submitScoreBtn = $(`.submitScore`);
-  submitScoreBtn.on("click", "button", highScoreList);
-}
+  //FUNCTION STORES HIGH SCORE AND INITIALS AND DISPLAYS THEM BELOW
+  var submitScoreBtn = $(".submitScore");
 
-function highScoreList() {
-  // var highScoreInput1 =
-  console.log("THIS IS WORKING");
-  // var storedScores = JSON.parse(
-  //   localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray))
-  // );
+  submitScoreBtn.on("click", function () {
+    console.log("THIS IS WORKING");
+    var highScoreInitialStore = initialInput.val();
+    var highScoreScoreStore = userScoreCorrect;
+
+    var highScoreRecord1 = [highScoreInitialStore, highScoreScoreStore];
+    //console.log(highScoreInitialStore);
+    //console.log(highScoreScoreStore);
+
+    var storedHighScoreRecord = JSON.parse(
+      localStorage.getItem("highScoreArray")
+    );
+
+    highScoreArray.push(highScoreRecord1);
+    localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray));
+
+    var newHighScore = $(
+      `<li> Initials: ${highScoreInitialStore} Score: ${highScoreScoreStore} </li>`
+    );
+
+    highScoreList.append(newHighScore);
+  });
 }
